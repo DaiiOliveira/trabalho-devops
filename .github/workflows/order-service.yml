@@ -180,7 +180,7 @@ jobs:
         shell: powershell
         env:
           NAMESPACE: ${{ vars.DEV_K8S_NAMESPACE || 'order-service' }}
-          IMAGE_TAG: latest-dev
+          IMAGE_TAG: ${{ steps.tags.outputs.primary }}
           KUSTOMIZE_PATH: k8s/services/order-service/dev
           DEPLOYMENT_NAME: order-service-dev
           SECRET_NAME: order-service-dev-secret
@@ -221,7 +221,7 @@ jobs:
         shell: powershell
         env:
           NAMESPACE: ${{ vars.HML_K8S_NAMESPACE || 'order-service' }}
-          IMAGE_TAG: latest-homol
+          IMAGE_TAG: ${{ steps.tags.outputs.primary }}
           KUSTOMIZE_PATH: k8s/services/order-service/homol
           DEPLOYMENT_NAME: order-service-homol
           SECRET_NAME: order-service-homol-secret
