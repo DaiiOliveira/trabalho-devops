@@ -11,4 +11,3 @@ data:
   DB_URL: jdbc:postgresql://order-postgres-dev:5432/order
   SWAGGER_ENABLED: "true"
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,metrics,prometheus
-  MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"
