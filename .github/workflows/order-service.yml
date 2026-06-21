@@ -193,11 +193,20 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_DB_PASSWORD)) { throw "Secret DEV_ORDER_DB_PASSWORD nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_POSTGRES_DB)) { throw "Secret DEV_ORDER_POSTGRES_DB nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio - output do job docker nao propagado" }
-            --from-literal="DB_PASSWORD=$env:DEV_ORDER_DB_PASSWORD" `
-            --from-literal="POSTGRES_DB=$env:DEV_ORDER_POSTGRES_DB" `
-            --from-literal="POSTGRES_USER=$env:DEV_ORDER_DB_USERNAME" `
-            --from-literal="POSTGRES_PASSWORD=$env:DEV_ORDER_DB_PASSWORD" `
-            --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl create namespace $env:NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+          $secretArgs = @(
+            "-n", $env:NAMESPACE,
+            "create", "secret", "generic", $env:SECRET_NAME,
+            "--from-literal=DB_USERNAME=$env:DEV_ORDER_DB_USERNAME",
+            "--from-literal=DB_PASSWORD=$env:DEV_ORDER_DB_PASSWORD",
+            "--from-literal=POSTGRES_DB=$env:DEV_ORDER_POSTGRES_DB",
+            "--from-literal=POSTGRES_USER=$env:DEV_ORDER_DB_USERNAME",
+            "--from-literal=POSTGRES_PASSWORD=$env:DEV_ORDER_DB_PASSWORD",
+            "--dry-run=client", "-o", "yaml"
+          )
+          kubectl @secretArgs | kubectl apply -f -
 
           kubectl -n $env:NAMESPACE apply -k $env:KUSTOMIZE_PATH
           kubectl -n $env:NAMESPACE set image "deployment/$env:DEPLOYMENT_NAME" "order-service=$($env:IMAGE_NAME):$($env:IMAGE_TAG)"
@@ -232,11 +241,20 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_DB_PASSWORD)) { throw "Secret HML_ORDER_DB_PASSWORD nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_POSTGRES_DB)) { throw "Secret HML_ORDER_POSTGRES_DB nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio - output do job docker nao propagado" }
-            --from-literal="DB_PASSWORD=$env:HML_ORDER_DB_PASSWORD" `
-            --from-literal="POSTGRES_DB=$env:HML_ORDER_POSTGRES_DB" `
-            --from-literal="POSTGRES_USER=$env:HML_ORDER_DB_USERNAME" `
-            --from-literal="POSTGRES_PASSWORD=$env:HML_ORDER_DB_PASSWORD" `
-            --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl create namespace $env:NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+          $secretArgs = @(
+            "-n", $env:NAMESPACE,
+            "create", "secret", "generic", $env:SECRET_NAME,
+            "--from-literal=DB_USERNAME=$env:HML_ORDER_DB_USERNAME",
+            "--from-literal=DB_PASSWORD=$env:HML_ORDER_DB_PASSWORD",
+            "--from-literal=POSTGRES_DB=$env:HML_ORDER_POSTGRES_DB",
+            "--from-literal=POSTGRES_USER=$env:HML_ORDER_DB_USERNAME",
+            "--from-literal=POSTGRES_PASSWORD=$env:HML_ORDER_DB_PASSWORD",
+            "--dry-run=client", "-o", "yaml"
+          )
+          kubectl @secretArgs | kubectl apply -f -
 
           kubectl -n $env:NAMESPACE apply -k $env:KUSTOMIZE_PATH
           kubectl -n $env:NAMESPACE set image "deployment/$env:DEPLOYMENT_NAME" "order-service=$($env:IMAGE_NAME):$($env:IMAGE_TAG)"
