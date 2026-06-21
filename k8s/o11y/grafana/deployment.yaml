@@ -37,4 +37,5 @@ spec:
           configMap:
             name: grafana-provisioning
         - name: grafana-dashboards
-          emptyDir: {}
+          configMap:
+            name: grafana-dashboards
