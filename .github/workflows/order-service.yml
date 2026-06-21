@@ -192,12 +192,7 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_DB_USERNAME)) { throw "Secret DEV_ORDER_DB_USERNAME nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_DB_PASSWORD)) { throw "Secret DEV_ORDER_DB_PASSWORD nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_POSTGRES_DB)) { throw "Secret DEV_ORDER_POSTGRES_DB nao configurado" }
-          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio — output do job docker nao propagado" }
-
-          kubectl create namespace $env:NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-
-          kubectl -n $env:NAMESPACE create secret generic $env:SECRET_NAME `
-            --from-literal="DB_USERNAME=$env:DEV_ORDER_DB_USERNAME" `
+          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio - output do job docker nao propagado" }
             --from-literal="DB_PASSWORD=$env:DEV_ORDER_DB_PASSWORD" `
             --from-literal="POSTGRES_DB=$env:DEV_ORDER_POSTGRES_DB" `
             --from-literal="POSTGRES_USER=$env:DEV_ORDER_DB_USERNAME" `
@@ -236,12 +231,7 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_DB_USERNAME)) { throw "Secret HML_ORDER_DB_USERNAME nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_DB_PASSWORD)) { throw "Secret HML_ORDER_DB_PASSWORD nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_POSTGRES_DB)) { throw "Secret HML_ORDER_POSTGRES_DB nao configurado" }
-          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio — output do job docker nao propagado" }
-
-          kubectl create namespace $env:NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-
-          kubectl -n $env:NAMESPACE create secret generic $env:SECRET_NAME `
-            --from-literal="DB_USERNAME=$env:HML_ORDER_DB_USERNAME" `
+          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio - output do job docker nao propagado" }
             --from-literal="DB_PASSWORD=$env:HML_ORDER_DB_PASSWORD" `
             --from-literal="POSTGRES_DB=$env:HML_ORDER_POSTGRES_DB" `
             --from-literal="POSTGRES_USER=$env:HML_ORDER_DB_USERNAME" `
