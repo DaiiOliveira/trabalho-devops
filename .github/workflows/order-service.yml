@@ -179,6 +179,7 @@ jobs:
       - name: Deploy no cluster Kubernetes
         shell: powershell
         env:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
           NAMESPACE: ${{ vars.DEV_K8S_NAMESPACE || 'order-service' }}
           IMAGE_TAG: ${{ needs.docker.outputs.tag }}
           KUSTOMIZE_PATH: k8s/services/order-service/dev
@@ -191,7 +192,7 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_DB_USERNAME)) { throw "Secret DEV_ORDER_DB_USERNAME nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_DB_PASSWORD)) { throw "Secret DEV_ORDER_DB_PASSWORD nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:DEV_ORDER_POSTGRES_DB)) { throw "Secret DEV_ORDER_POSTGRES_DB nao configurado" }
-          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio - output do job docker nao propagado" }
+          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio — output do job docker nao propagado" }
 
           kubectl create namespace $env:NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
@@ -222,6 +223,7 @@ jobs:
       - name: Deploy no cluster Kubernetes
         shell: powershell
         env:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
           NAMESPACE: ${{ vars.HML_K8S_NAMESPACE || 'order-service' }}
           IMAGE_TAG: ${{ needs.docker.outputs.tag }}
           KUSTOMIZE_PATH: k8s/services/order-service/homol
@@ -234,7 +236,7 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_DB_USERNAME)) { throw "Secret HML_ORDER_DB_USERNAME nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_DB_PASSWORD)) { throw "Secret HML_ORDER_DB_PASSWORD nao configurado" }
           if ([string]::IsNullOrWhiteSpace($env:HML_ORDER_POSTGRES_DB)) { throw "Secret HML_ORDER_POSTGRES_DB nao configurado" }
-          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio - output do job docker nao propagado" }
+          if ([string]::IsNullOrWhiteSpace($env:IMAGE_TAG)) { throw "IMAGE_TAG vazio — output do job docker nao propagado" }
 
           kubectl create namespace $env:NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
