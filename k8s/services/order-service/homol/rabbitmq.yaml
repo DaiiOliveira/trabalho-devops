@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: order-rabbitmq-homol-data
+  labels:
+    app: order-rabbitmq-homol
+    environment: homol
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: order-rabbitmq-homol
+  labels:
+    app: order-rabbitmq-homol
+    environment: homol
+spec:
+  serviceName: order-rabbitmq-homol
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-rabbitmq-homol
+  template:
+    metadata:
+      labels:
+        app: order-rabbitmq-homol
+        environment: homol
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management-alpine
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: management
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: order-service-homol-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: order-service-homol-secret
+                  key: RABBITMQ_PASSWORD
+          startupProbe:
+            tcpSocket:
+              port: 5672
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 5672
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 5672
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: order-rabbitmq-homol-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-rabbitmq-homol
+  labels:
+    app: order-rabbitmq-homol
+    environment: homol
+spec:
+  type: ClusterIP
+  selector:
+    app: order-rabbitmq-homol
+  ports:
+    - name: amqp
+      port: 5672
+      targetPort: amqp
+    - name: management
+      port: 15672
+      targetPort: management

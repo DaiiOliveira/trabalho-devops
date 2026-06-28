@@ -9,6 +9,8 @@ data:
   SPRING_APPLICATION_NAME: order-service
   SPRING_PROFILES_ACTIVE: homol
   DB_URL: jdbc:postgresql://order-postgres-homol:5432/order
+  RABBITMQ_HOST: order-rabbitmq-homol
+  RABBITMQ_PORT: "5672"
   SWAGGER_ENABLED: "false"
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,metrics,prometheus
   # MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"

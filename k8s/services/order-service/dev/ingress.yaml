@@ -5,14 +5,15 @@ metadata:
   labels:
     app: order-service-dev
     environment: dev
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
-    - host: dev.devops.local
-      http:
+    - http:
         paths:
-          - path: /api/orders
-            pathType: Prefix
+          - path: /dev(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: order-service-dev

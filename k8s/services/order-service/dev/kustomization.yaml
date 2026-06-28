@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - configmap.yaml
   - postgres.yaml
+  - rabbitmq.yaml
   - deployment.yaml
   - service.yaml
   - ingress.yaml
